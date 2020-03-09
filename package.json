@@ -1,0 +1,17 @@
+{
+  "name": "ghlog",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node servor"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {},
+  "dependencies": {
+    "csz": "^1.2.0",
+    "htm": "^3.0.3",
+    "preact": "^10.3.3"
+  }
+}
