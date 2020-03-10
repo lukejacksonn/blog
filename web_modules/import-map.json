@@ -1,0 +1,7 @@
+{
+  "imports": {
+    "csz": "./csz.js",
+    "htm": "./htm.js",
+    "preact": "./preact.js"
+  }
+}
