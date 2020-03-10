@@ -5,20 +5,13 @@ import htm from './web_modules/htm.js';
 import css from './web_modules/csz.js';
 
 const html = htm.bind(h);
-const path = location.host.match('github.io')
-  ? '/' +
-    location.pathname
-      .split('/')
-      .slice(2)
-      .join('/')
-  : location.pathname;
 
 const getPost = file =>
   fetch(`./posts/${file}.md`)
     .then(res => res.text())
     .then(marked);
 
-const index = () => {
+const index = ({ route }) => {
   const [posts, setPosts] = useState([]);
 
   useEffect(() => {
@@ -39,7 +32,14 @@ const index = () => {
         ${posts.map(
           ([url, post]) =>
             html`
-              <a href=${url} className=${style.article}>
+              <a
+                href=${url}
+                onClick=${e => {
+                  e.preventDefault();
+                  window.history.pushState(null, null, url);
+                }}
+                className=${style.article}
+              >
                 <article innerHTML=${post}></article>
               </a>
             `
@@ -49,11 +49,11 @@ const index = () => {
   `;
 };
 
-const article = () => {
+const article = ({ route }) => {
   const [post, setPost] = useState('');
 
   useEffect(() => {
-    getPost(path.slice(1)).then(setPost);
+    getPost(route.slice(1)).then(setPost);
   }, []);
 
   return html`
@@ -210,9 +210,40 @@ const style = {
   `
 };
 
+const app = () => {
+  const [route, setRoute] = useState(null);
+
+  useEffect(() => {
+    const updateRoute = () =>
+      setRoute(
+        location.host.match('github.io')
+          ? '/' +
+              location.pathname
+                .split('/')
+                .slice(2)
+                .join('/')
+          : location.pathname
+      );
+    addEventListener('popstate', updateRoute);
+    const pushState = window.history.pushState;
+    window.history.pushState = function() {
+      pushState.apply(history, arguments);
+      updateRoute();
+    };
+    updateRoute();
+  }, []);
+
+  return (
+    route &&
+    html`
+      <${route === '/' ? index : article} route=${route} />
+    `
+  );
+};
+
 render(
   html`
-    <${path === '/' ? index : article} />
+    <${app} />
   `,
   document.body
 );
