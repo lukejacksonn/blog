@@ -9,7 +9,27 @@
           history.replaceState(null, null, redirect);
       })();
     </script>
-    <link rel="stylesheet" href="./index.css" />
+    <style>
+      *,
+      *::after,
+      *::before {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      html {
+        background: #212121;
+        font-size: calc(10px + 1vmin);
+      }
+
+      body {
+        display: flex;
+        flex-direction: column;
+        font-family: sans-serif;
+        color: rgba(255, 255, 255, 0.8);
+      }
+    </style>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script defer src="./index.js" type="module"></script>
   </head>
