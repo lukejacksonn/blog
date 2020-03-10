@@ -1,6 +1,14 @@
 <html>
   <head>
     <title>lukejacksonn | blog</title>
+    <script>
+      (function() {
+        var redirect = sessionStorage.redirect;
+        delete sessionStorage.redirect;
+        if (redirect && redirect != location.href)
+          history.replaceState(null, null, redirect);
+      })();
+    </script>
     <link rel="stylesheet" href="./index.css" />
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script defer src="./index.js" type="module"></script>
