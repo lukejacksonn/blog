@@ -14,7 +14,7 @@ const path = location.host.match('github.io')
   : location.pathname;
 
 const getPost = file =>
-  fetch(`/posts/${file}.md`)
+  fetch(`./posts/${file}.md`)
     .then(res => res.text())
     .then(marked);
 
