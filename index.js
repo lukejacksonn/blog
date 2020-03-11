@@ -88,6 +88,9 @@ const index = () => {
       <div>
         ${posts
           .filter(([k, v]) => k.toLowerCase().match(searchTerm.toLowerCase()))
+          .sort(([k, v], [k1, v1]) =>
+            +new Date(v.mtime) > +new Date(v1.mtime) ? -1 : 0
+          )
           .map(
             x =>
               html`
@@ -147,23 +150,27 @@ const style = {
   `,
   index: css`
     display: flex;
-    align-items: center;
     width: 100%;
+    overflow: hidden;
     overflow-x: scroll;
     -webkit-overflow-scrolling: touch;
+    flex: 1 1 100%;
+
     > div {
-      display: flex;
       padding: 2rem;
+      display: flex;
+      height: 100%;
     }
     > div > * + * {
       margin-left: 2rem;
     }
     > div > a {
+      display: block;
       flex: none;
-      width: 24rem;
+      width: 22rem;
       position: relative;
       text-decoration: none;
-      height: 80vh;
+      height: 100%;
       border: 0;
       box-shadow: 0 0 1rem rgba(0, 0, 0, 0.2);
       opacity: 0.6;
@@ -190,11 +197,14 @@ const style = {
   `,
   article: css`
     width: 100%;
-    max-width: 100ch;
     margin: 0 auto;
-    padding: 3rem 2rem 4rem;
+    padding: 2rem 2rem 4rem;
+    overflow-y: auto;
+    height: 100%;
+    -webkit-overflow-scrolling: touch;
 
     article {
+      max-width: 80ch;
       color: #fff;
       line-height: 2;
       word-wrap: break-word;

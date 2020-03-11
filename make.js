@@ -1,5 +1,4 @@
 const fs = require('fs');
-const servor = require('servor');
 
 const details = file => ({
   size: fs.readFileSync(`./posts/${file}`).length,
