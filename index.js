@@ -79,7 +79,7 @@ const index = () => {
       </svg>
       <input
         className=${style.searchInput}
-        placeholder="Search through blog posts..."
+        placeholder="Search blog posts..."
         onInput=${e => setSearchTerm(e.target.value)}
       />
       <img className=${style.avatar} src=${avatar} />
@@ -87,7 +87,7 @@ const index = () => {
     <main className=${style.index}>
       <div>
         ${posts
-          .filter(([k, v]) => k.match(searchTerm))
+          .filter(([k, v]) => k.toLowerCase().match(searchTerm.toLowerCase()))
           .map(
             x =>
               html`
@@ -125,9 +125,9 @@ const style = {
     }
   `,
   logo: css`
-    width: 3rem;
-    height: 3rem;
-    fill: #444;
+    width: 4rem;
+    height: 4rem;
+    fill: #333;
   `,
   avatar: css`
     width: 3.2rem;
@@ -137,19 +137,20 @@ const style = {
   searchInput: css`
     background: #111;
     display: block;
-    font-size: 1rem;
+    font-size: 1.38rem;
     padding: 1rem;
     border: 1px solid #222;
     border-radius: 1rem;
     flex: 1 1 100%;
     color: rgba(255, 255, 255, 0.8);
+    min-width: 0;
   `,
   index: css`
     display: flex;
     align-items: center;
     width: 100%;
-    overflow-x: auto;
-
+    overflow-x: scroll;
+    -webkit-overflow-scrolling: touch;
     > div {
       display: flex;
       padding: 2rem;
