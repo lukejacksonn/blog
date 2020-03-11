@@ -42,7 +42,7 @@ Children are flattened and falsey children are excluded. Numbers passed as child
 
 ## Installation
 
-```
+```bash
 npm i ijk
 ```
 

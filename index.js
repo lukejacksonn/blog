@@ -273,7 +273,7 @@ const style = {
 
       a {
         display: inline-block;
-        color: #00dddd;
+        color: #aaa;
         margin-top: 0;
       }
 
@@ -292,6 +292,7 @@ const style = {
       blockquote {
         border-left: 2px solid rgba(255, 255, 255, 0.38);
         padding: 0.38em 1em;
+        font-style: italic;
       }
 
       :not(pre) > code {
