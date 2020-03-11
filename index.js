@@ -1,8 +1,12 @@
-import { h, render } from 'https://cdn.pika.dev/preact@^10.0.0';
-import { useState, useEffect } from 'https://cdn.pika.dev/preact@^10.0.0/hooks';
+import { h, render } from 'https://cdn.pika.dev/preact@10.3.3';
+import {
+  useState,
+  useEffect,
+  useRef
+} from 'https://cdn.pika.dev/preact@10.3.3/hooks';
 
-import htm from './web_modules/htm.js';
-import css from './web_modules/csz.js';
+import htm from 'https://cdn.pika.dev/htm@3.0.3';
+import css from 'https://cdn.pika.dev/csz@1.2.0';
 
 const html = htm.bind(h);
 
@@ -11,39 +15,59 @@ const getPost = file =>
     .then(res => res.text())
     .then(marked);
 
-const index = ({ route }) => {
+const getPosts = () =>
+  fetch('./posts.json')
+    .then(res => res.json())
+    .catch(() => ({}));
+
+const linkToArticle = ([url, meta]) => {
+  const ref = useRef();
+  const [post, setPost] = useState('');
+
+  useEffect(() => {
+    let observer = new IntersectionObserver(
+      container => {
+        if (container[0].intersectionRatio > 0.1 && post === '')
+          getPost(url).then(setPost);
+      },
+      {
+        root: null,
+        rootMargin: '0px',
+        threshold: 0.1
+      }
+    );
+    observer.observe(ref.current);
+    return () => observer.unobserve(ref.current);
+  }, [post]);
+
+  return html`
+    <a
+      ref=${ref}
+      href=${url}
+      onClick=${e => {
+        e.preventDefault();
+        window.history.pushState(null, null, url);
+      }}
+      className=${style.article}
+    >
+      <article innerHTML=${post}></article>
+    </a>
+  `;
+};
+
+const index = () => {
   const [posts, setPosts] = useState([]);
 
   useEffect(() => {
-    fetch('./data.json')
-      .then(res => res.json())
-      .then(data => {
-        Promise.all(
-          Object.entries(data).map(([k, v]) =>
-            getPost(k).then(post => [k, post])
-          )
-        ).then(setPosts);
-      });
+    getPosts()
+      .then(data => Object.entries(data))
+      .then(setPosts);
   }, []);
 
   return html`
     <main className=${style.index}>
       <div>
-        ${posts.map(
-          ([url, post]) =>
-            html`
-              <a
-                href=${url}
-                onClick=${e => {
-                  e.preventDefault();
-                  window.history.pushState(null, null, url);
-                }}
-                className=${style.article}
-              >
-                <article innerHTML=${post}></article>
-              </a>
-            `
-        )}
+        ${posts.map(linkToArticle)}
       </div>
     </main>
   `;

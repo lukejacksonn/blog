@@ -10,7 +10,7 @@ const posts = fs
   .readdirSync('./posts')
   .reduce((a, b) => ({ ...a, [b.replace('.md', '')]: details(b) }), {});
 
-fs.writeFileSync('./data.json', JSON.stringify(posts));
+fs.writeFileSync('./posts.json', JSON.stringify(posts));
 
 (async () => {
   const { url } = await servor({ reload: true, silent: false, port: 1337 });
