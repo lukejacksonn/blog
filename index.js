@@ -48,9 +48,8 @@ const linkToArticle = ({ data: [url, meta] }) => {
         e.preventDefault();
         window.history.pushState(null, null, url);
       }}
-      className=${style.article}
     >
-      <article innerHTML=${post}></article>
+      <article className=${style.article} innerHTML=${post}></article>
     </a>
   `;
 };
@@ -110,8 +109,8 @@ const article = ({ route }) => {
   }, []);
 
   return html`
-    <main className=${style.article}>
-      <article innerHTML=${post} />
+    <main className=${style.post}>
+      <article className=${style.article} innerHTML=${post} />
     </main>
   `;
 };
@@ -147,6 +146,8 @@ const style = {
     flex: 1 1 100%;
     color: rgba(255, 255, 255, 0.8);
     min-width: 0;
+    margin-right: auto;
+    max-width: 20rem;
   `,
   index: css`
     display: flex;
@@ -178,6 +179,8 @@ const style = {
       border-radius: 1rem;
       overflow: hidden;
       font-size: 0.8rem;
+      padding: 2rem 2rem 4rem;
+
       p {
         line-height: 162%;
       }
@@ -198,7 +201,7 @@ const style = {
       }
     }
   `,
-  article: css`
+  post: css`
     width: 100%;
     margin: 0 auto;
     padding: 2rem 2rem 4rem;
@@ -206,99 +209,102 @@ const style = {
     height: 100%;
     -webkit-overflow-scrolling: touch;
 
-    article {
-      max-width: 80ch;
-      color: #fff;
-      line-height: 2;
-      word-wrap: break-word;
+    @media (min-width: 110ch) {
+      padding: 5vw 2rem 4rem;
+    }
+  `,
+  article: css`
+    max-width: 80ch;
+    color: #fff;
+    line-height: 2;
+    word-wrap: break-word;
+    width: 100%;
+    margin: 0 auto;
+    color: rgba(255, 255, 255, 0.8);
+
+    > * + * {
+      margin-top: 2em;
+    }
+
+    hr {
+      opacity: 0.38;
+    }
+
+    li {
+      list-style: disc;
+      list-style-position: inside;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    strong {
+      font-weight: bold;
+    }
+
+    h1 {
+      text-align: left;
+      font-size: 2em;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+      padding-bottom: 0.62em;
+      line-height: 1.38;
+    }
+
+    h2 {
+      font-size: 1.62em;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+      padding-bottom: 0.62em;
+      margin-bottom: 1em;
+    }
+
+    h3 {
+      font-size: 1em;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+      padding-bottom: 0.62em;
+      margin-bottom: 1em;
+    }
+
+    img {
+      display: block;
       width: 100%;
-      margin: 0 auto;
-      color: rgba(255, 255, 255, 0.8);
+      max-width: 100%;
+    }
 
-      > * + * {
-        margin-top: 2em;
-      }
+    pre {
+      background: rgba(0, 0, 0, 0.2);
+      padding: 1em;
+      border-radius: 0.38em;
+      overflow-x: scroll;
+    }
 
-      hr {
-        opacity: 0.38;
-      }
+    a {
+      display: inline-block;
+      color: #aaa;
+      margin-top: 0;
+    }
 
-      li {
-        list-style: disc;
-        list-style-position: inside;
-      }
+    table {
+      border-collapse: collapse;
+      color: inherit;
+    }
 
-      h1,
-      h2,
-      h3,
-      h4,
-      strong {
-        font-weight: bold;
-      }
+    td,
+    th,
+    tr {
+      border: 1px solid rgba(255, 255, 255, 0.38);
+      padding: 0.62em;
+    }
 
-      h1 {
-        text-align: left;
-        font-size: 2em;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-        padding-bottom: 0.62em;
-        line-height: 1.38;
-      }
+    blockquote {
+      border-left: 2px solid rgba(255, 255, 255, 0.38);
+      padding: 0.38em 1em;
+      font-style: italic;
+    }
 
-      h2 {
-        font-size: 1.62em;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-        padding-bottom: 0.62em;
-        margin-bottom: 1em;
-      }
-
-      h3 {
-        font-size: 1em;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-        padding-bottom: 0.62em;
-        margin-bottom: 1em;
-      }
-
-      img {
-        display: block;
-        width: 100%;
-        max-width: 100%;
-      }
-
-      pre {
-        background: rgba(0, 0, 0, 0.2);
-        padding: 1em;
-        border-radius: 0.38em;
-        overflow-x: scroll;
-      }
-
-      a {
-        display: inline-block;
-        color: #aaa;
-        margin-top: 0;
-      }
-
-      table {
-        border-collapse: collapse;
-        color: inherit;
-      }
-
-      td,
-      th,
-      tr {
-        border: 1px solid rgba(255, 255, 255, 0.38);
-        padding: 0.62em;
-      }
-
-      blockquote {
-        border-left: 2px solid rgba(255, 255, 255, 0.38);
-        padding: 0.38em 1em;
-        font-style: italic;
-      }
-
-      :not(pre) > code {
-        padding: 0 0.38em;
-        background: #333;
-      }
+    :not(pre) > code {
+      padding: 0 0.38em;
+      background: #333;
     }
   `
 };
