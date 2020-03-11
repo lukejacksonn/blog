@@ -20,7 +20,7 @@ const getPosts = () =>
     .then(res => res.json())
     .catch(() => ({}));
 
-const linkToArticle = ([url, meta]) => {
+const linkToArticle = ({ data: [url, meta] }) => {
   const ref = useRef();
   const [post, setPost] = useState('');
 
@@ -57,6 +57,11 @@ const linkToArticle = ([url, meta]) => {
 
 const index = () => {
   const [posts, setPosts] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const avatar = location.host.match('github.io')
+    ? `https://github.com/${location.host.split('.')[0]}.png`
+    : 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkqAcAAIUAgUW0RjgAAAAASUVORK5CYII=';
 
   useEffect(() => {
     getPosts()
@@ -65,9 +70,30 @@ const index = () => {
   }, []);
 
   return html`
+    <header className=${style.header}>
+      <svg className=${style.logo} viewBox="0 0 16 16" aria-hidden="true">
+        <path
+          fill-rule="evenodd"
+          d="M3 5h4v1H3V5zm0 3h4V7H3v1zm0 2h4V9H3v1zm11-5h-4v1h4V5zm0 2h-4v1h4V7zm0 2h-4v1h4V9zm2-6v9c0 .55-.45 1-1 1H9.5l-1 1-1-1H2c-.55 0-1-.45-1-1V3c0-.55.45-1 1-1h5.5l1 1 1-1H15c.55 0 1 .45 1 1zm-8 .5L7.5 3H2v9h6V3.5zm7-.5H9.5l-.5.5V12h6V3z"
+        />
+      </svg>
+      <input
+        className=${style.searchInput}
+        placeholder="Search through blog posts..."
+        onInput=${e => setSearchTerm(e.target.value)}
+      />
+      <img className=${style.avatar} src=${avatar} />
+    </header>
     <main className=${style.index}>
       <div>
-        ${posts.map(linkToArticle)}
+        ${posts
+          .filter(([k, v]) => k.match(searchTerm))
+          .map(
+            x =>
+              html`
+                <${linkToArticle} data=${x} key=${x[0]} />
+              `
+          )}
       </div>
     </main>
   `;
@@ -88,18 +114,48 @@ const article = ({ route }) => {
 };
 
 const style = {
+  header: css`
+    display: flex;
+    align-items: center;
+    background: #191919;
+    padding: 1rem;
+
+    > * + * {
+      margin-left: 1rem;
+    }
+  `,
+  logo: css`
+    width: 3rem;
+    height: 3rem;
+    fill: #444;
+  `,
+  avatar: css`
+    width: 3.2rem;
+    height: 3.2rem;
+    border-radius: 50%;
+  `,
+  searchInput: css`
+    background: #111;
+    display: block;
+    font-size: 1rem;
+    padding: 1rem;
+    border: 1px solid #222;
+    border-radius: 1rem;
+    flex: 1 1 100%;
+    color: rgba(255, 255, 255, 0.8);
+  `,
   index: css`
     display: flex;
     align-items: center;
     width: 100%;
-    overflow-y: auto;
-    height: 100vh;
+    overflow-x: auto;
+
     > div {
       display: flex;
-      padding: 4rem;
+      padding: 2rem;
     }
     > div > * + * {
-      margin-left: 4rem;
+      margin-left: 2rem;
     }
     > div > a {
       flex: none;
@@ -114,6 +170,7 @@ const style = {
       border-radius: 1rem;
       overflow: hidden;
       font-size: 14px;
+      border: 2px solid #333;
       &::before {
         content: '';
         position: absolute;
@@ -125,12 +182,9 @@ const style = {
       }
       &:hover {
         opacity: 1;
-        transform: scale(1.062);
+        transform: scale(1.038);
         box-shadow: 0 0 2rem rgba(0, 0, 0, 0.2);
       }
-    }
-    iframe {
-      width: 100%;
     }
   `,
   article: css`

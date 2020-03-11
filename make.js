@@ -11,8 +11,3 @@ const posts = fs
   .reduce((a, b) => ({ ...a, [b.replace('.md', '')]: details(b) }), {});
 
 fs.writeFileSync('./posts.json', JSON.stringify(posts));
-
-(async () => {
-  const { url } = await servor({ reload: true, silent: false, port: 1337 });
-  console.log(url);
-})();
