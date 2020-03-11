@@ -79,7 +79,7 @@ const index = () => {
       </svg>
       <input
         className=${style.searchInput}
-        placeholder="Search blog posts..."
+        placeholder="Search for articles..."
         onInput=${e => setSearchTerm(e.target.value)}
       />
       <img className=${style.avatar} src=${avatar} />
