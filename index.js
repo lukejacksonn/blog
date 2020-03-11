@@ -173,11 +173,14 @@ const style = {
       height: 100%;
       border: 0;
       box-shadow: 0 0 1rem rgba(0, 0, 0, 0.2);
-      opacity: 0.6;
+      opacity: 0.8;
       transition: transform 0.3s;
       border-radius: 1rem;
       overflow: hidden;
-      font-size: 14px;
+      font-size: 0.8rem;
+      p {
+        line-height: 162%;
+      }
       border: 2px solid #333;
       &::before {
         content: '';
@@ -235,7 +238,7 @@ const style = {
 
       h1 {
         text-align: left;
-        font-size: 3em;
+        font-size: 2em;
         border-bottom: 1px solid rgba(255, 255, 255, 0.2);
         padding-bottom: 0.62em;
         line-height: 1.38;
