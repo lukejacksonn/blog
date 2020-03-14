@@ -2,9 +2,9 @@
 
 > forkable static personal blogging solution
 
-A clientside only web app that indexes, fetches and renders markdown on demand at runtime. A lightweight alternative to static site generators such as gatsby and next. Intended to be self hosted for free using GitHub pages.
+A clientside only web app with the sole purpose of indexing, fetching and rendering markdown file at runtime. A lightweight alternative to static site generators such as gatsby and next. Intended to be self hosted for free using GitHub pages.
 
-Both the content and the application code is completely static which means no lengthy build steps ever; handling hundreds of posts efforlessly. Because all compilation and linking happens at runtime, all changes are rendered in the browser instantly. Deployment to GitHub pages happens after `git push` with no CI required. It is even possible to edit existing posts file via the GitHub UI alone.
+Both the content and the application code is completely static which means no lengthy build steps ever; handling hundreds of posts efforlessly. Because all compilation and linking happens in the browser at runtime, any changes are rendered almost instantly. Deployment to GitHub pages happens after `git push` with no CI required. It is even possible to edit existing posts file via the GitHub UI alone.
 
 ## Features
 
@@ -28,7 +28,7 @@ For example, if a file exists in the posts directory named `first-post.md` then 
 
 ### Generating an Index
 
-This should be done after adding or removing a post from the `posts` directory, To generate an index that includes the new file (or excludes and removed file) run the following command from the project root:
+This should be done after adding or removing a post from the `posts` directory. To generate an index that includes the new file (or excludes and removed file) run the following command from the project root:
 
 ```bash
 node make
