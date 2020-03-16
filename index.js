@@ -55,7 +55,7 @@ const linkToArticle = ({ data: [url, meta] }) => {
 };
 
 const index = () => {
-  const [posts, setPosts] = useState([]);
+  const [posts, setPosts] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
 
   const avatar = location.host.match('github.io')
@@ -70,11 +70,11 @@ const index = () => {
 
   return html`
     <header className=${style.header}>
-      <svg className=${style.logo} viewBox="0 0 16 16" aria-hidden="true">
+      <svg className=${style.logo} viewBox="0 0 12 16" aria-hidden="true">
         <path
           fill-rule="evenodd"
-          d="M3 5h4v1H3V5zm0 3h4V7H3v1zm0 2h4V9H3v1zm11-5h-4v1h4V5zm0 2h-4v1h4V7zm0 2h-4v1h4V9zm2-6v9c0 .55-.45 1-1 1H9.5l-1 1-1-1H2c-.55 0-1-.45-1-1V3c0-.55.45-1 1-1h5.5l1 1 1-1H15c.55 0 1 .45 1 1zm-8 .5L7.5 3H2v9h6V3.5zm7-.5H9.5l-.5.5V12h6V3z"
-        />
+          d="M4 9H3V8h1v1zm0-3H3v1h1V6zm0-2H3v1h1V4zm0-2H3v1h1V2zm8-1v12c0 .55-.45 1-1 1H6v2l-1.5-1.5L3 16v-2H1c-.55 0-1-.45-1-1V1c0-.55.45-1 1-1h10c.55 0 1 .45 1 1zm-1 10H1v2h2v-1h3v1h5v-2zm0-10H2v9h9V1z"
+        ></path>
       </svg>
       <input
         className=${style.searchInput}
@@ -85,17 +85,35 @@ const index = () => {
     </header>
     <main className=${style.index}>
       <div>
-        ${posts
-          .filter(([k, v]) => k.toLowerCase().match(searchTerm.toLowerCase()))
-          .sort(([k, v], [k1, v1]) =>
-            +new Date(v.mtime) > +new Date(v1.mtime) ? -1 : 0
-          )
-          .map(
-            x =>
-              html`
-                <${linkToArticle} data=${x} key=${x[0]} />
+        ${posts &&
+          (posts.length === 0
+            ? html`
+                <div className=${style.gettingStarted}>
+                  <svg viewBox="0 0 14 16" aria-hidden="true">
+                    <path
+                      fill-rule="evenodd"
+                      d="M12 8V1c0-.55-.45-1-1-1H1C.45 0 0 .45 0 1v12c0 .55.45 1 1 1h2v2l1.5-1.5L6 16v-4H3v1H1v-2h7v-1H2V1h9v7h1zM4 2H3v1h1V2zM3 4h1v1H3V4zm1 2H3v1h1V6zm0 3H3V8h1v1zm6 3H8v2h2v2h2v-2h2v-2h-2v-2h-2v2z"
+                    ></path>
+                  </svg>
+                  <p>
+                    Add a markdown file to the posts directory and run
+                    ${' '}<code>node make</code>${' '} from the project root.
+                  </p>
+                </div>
               `
-          )}
+            : posts
+                .filter(([k, v]) =>
+                  k.toLowerCase().match(searchTerm.toLowerCase())
+                )
+                .sort(([k, v], [k1, v1]) =>
+                  +new Date(v.mtime) > +new Date(v1.mtime) ? -1 : 0
+                )
+                .map(
+                  x =>
+                    html`
+                      <${linkToArticle} data=${x} key=${x[0]} />
+                    `
+                ))}
       </div>
     </main>
   `;
@@ -116,6 +134,28 @@ const article = ({ route }) => {
 };
 
 const style = {
+  gettingStarted: css`
+    width: 50ch;
+    max-width: 100%;
+    margin: auto;
+    text-align: center;
+    line-height: 150%;
+    font-size: 1.38rem;
+    color: rgba(0, 0, 0, 0.38);
+    font-weight: bold;
+    padding: 1rem;
+    svg {
+      width: 10ch;
+      fill: rgba(0, 0, 0, 0.38);
+    }
+    code {
+      background: rgba(0, 0, 0, 0.1);
+      padding: 0 0.5ch;
+    }
+    > * + * {
+      margin-top: 2rem;
+    }
+  `,
   header: css`
     display: flex;
     align-items: center;
@@ -127,19 +167,20 @@ const style = {
     }
   `,
   logo: css`
-    width: 4rem;
-    height: 4rem;
-    fill: #333;
-  `,
-  avatar: css`
     width: 3.2rem;
     height: 3.2rem;
+    fill: #262626;
+    transform: translateY(5%);
+  `,
+  avatar: css`
+    width: 3rem;
+    height: 3rem;
     border-radius: 50%;
   `,
   searchInput: css`
     background: #111;
     display: block;
-    font-size: 1.38rem;
+    font-size: 1.2rem;
     padding: 1rem;
     border: 1px solid #222;
     border-radius: 1rem;
@@ -152,10 +193,11 @@ const style = {
   index: css`
     display: flex;
     width: 100%;
+    height: 100%;
     overflow: hidden;
     overflow-x: scroll;
     -webkit-overflow-scrolling: touch;
-    flex: 1 1 100%;
+    flex: 0 1 100%;
 
     > div {
       padding: 2rem;
