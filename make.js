@@ -1,8 +1,8 @@
 const fs = require('fs');
 
-const details = file => ({
+const details = (file) => ({
   size: fs.readFileSync(`./posts/${file}`).length,
-  mtime: fs.statSync(`./posts/${file}`).mtime
+  mtime: fs.statSync(`./posts/${file}`).mtime,
 });
 
 const posts = fs

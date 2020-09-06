@@ -1,39 +1,67 @@
-import { h, render } from 'https://cdn.pika.dev/preact@10.3.3';
 import {
+  render,
+  useReducer,
   useState,
   useEffect,
-  useRef
-} from 'https://cdn.pika.dev/preact@10.3.3/hooks';
+  useRef,
+  html,
+  css,
+} from '../runtime.js';
 
-import htm from 'https://cdn.pika.dev/htm@3.0.3';
-import css from 'https://cdn.pika.dev/csz@1.2.0';
-
-const html = htm.bind(h);
-
-const getPost = file =>
+const getPost = (file) =>
   fetch(`./posts/${file}.md`)
-    .then(res => res.text())
+    .then((res) => res.text())
     .then(marked);
 
 const getPosts = () =>
   fetch('./posts.json')
-    .then(res => res.json())
+    .then((res) => res.json())
     .catch(() => ({}));
 
-const linkToArticle = ({ data: [url, meta] }) => {
+const avatar = location.host.match('github.io')
+  ? `https://github.com/${location.host.split('.')[0]}.png`
+  : 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkqAcAAIUAgUW0RjgAAAAASUVORK5CYII=';
+
+const header = ({ state, dispatch }) => {
+  return html`
+    <header className=${style.header}>
+      <a
+        onClick=${(e) => {
+          e.preventDefault();
+          window.history.pushState(null, null, '/');
+        }}
+      >
+        <svg className=${style.logo} viewBox="0 0 12 16" aria-hidden="true">
+          <path
+            fill-rule="evenodd"
+            d="M4 9H3V8h1v1zm0-3H3v1h1V6zm0-2H3v1h1V4zm0-2H3v1h1V2zm8-1v12c0 .55-.45 1-1 1H6v2l-1.5-1.5L3 16v-2H1c-.55 0-1-.45-1-1V1c0-.55.45-1 1-1h10c.55 0 1 .45 1 1zm-1 10H1v2h2v-1h3v1h5v-2zm0-10H2v9h9V1z"
+          ></path>
+        </svg>
+      </a>
+      <input
+        className=${style.searchInput}
+        placeholder="Search for articles..."
+        onInput=${(e) => dispatch({ searchTerm: e.target.value })}
+      />
+      <img className=${style.avatar} src=${avatar} />
+    </header>
+  `;
+};
+
+const linkToArticle = ({ data: [url, meta], dispatch }) => {
   const ref = useRef();
   const [post, setPost] = useState('');
 
   useEffect(() => {
     let observer = new IntersectionObserver(
-      container => {
+      (container) => {
         if (container[0].intersectionRatio > 0.1 && post === '')
           getPost(url).then(setPost);
       },
       {
         root: null,
         rootMargin: '0px',
-        threshold: 0.1
+        threshold: 0.1,
       }
     );
     observer.observe(ref.current);
@@ -44,8 +72,9 @@ const linkToArticle = ({ data: [url, meta] }) => {
     <a
       ref=${ref}
       href=${url}
-      onClick=${e => {
+      onClick=${(e) => {
         e.preventDefault();
+        dispatch({ post: '' });
         window.history.pushState(null, null, url);
       }}
     >
@@ -54,81 +83,65 @@ const linkToArticle = ({ data: [url, meta] }) => {
   `;
 };
 
-const index = () => {
-  const [posts, setPosts] = useState(null);
-  const [searchTerm, setSearchTerm] = useState('');
-
-  const avatar = location.host.match('github.io')
-    ? `https://github.com/${location.host.split('.')[0]}.png`
-    : 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkqAcAAIUAgUW0RjgAAAAASUVORK5CYII=';
+const index = ({ state, dispatch }) => {
+  const { posts, searchTerm } = state;
 
   useEffect(() => {
     getPosts()
-      .then(data => Object.entries(data))
-      .then(setPosts);
+      .then((data) => Object.entries(data))
+      .then((posts) => dispatch({ posts }));
   }, []);
 
   return html`
-    <header className=${style.header}>
-      <svg className=${style.logo} viewBox="0 0 12 16" aria-hidden="true">
-        <path
-          fill-rule="evenodd"
-          d="M4 9H3V8h1v1zm0-3H3v1h1V6zm0-2H3v1h1V4zm0-2H3v1h1V2zm8-1v12c0 .55-.45 1-1 1H6v2l-1.5-1.5L3 16v-2H1c-.55 0-1-.45-1-1V1c0-.55.45-1 1-1h10c.55 0 1 .45 1 1zm-1 10H1v2h2v-1h3v1h5v-2zm0-10H2v9h9V1z"
-        ></path>
-      </svg>
-      <input
-        className=${style.searchInput}
-        placeholder="Search for articles..."
-        onInput=${e => setSearchTerm(e.target.value)}
-      />
-      <img className=${style.avatar} src=${avatar} />
-    </header>
     <main className=${style.index}>
       <div>
         ${posts &&
-          (posts.length === 0
-            ? html`
-                <div className=${style.gettingStarted}>
-                  <svg viewBox="0 0 14 16" aria-hidden="true">
-                    <path
-                      fill-rule="evenodd"
-                      d="M12 8V1c0-.55-.45-1-1-1H1C.45 0 0 .45 0 1v12c0 .55.45 1 1 1h2v2l1.5-1.5L6 16v-4H3v1H1v-2h7v-1H2V1h9v7h1zM4 2H3v1h1V2zM3 4h1v1H3V4zm1 2H3v1h1V6zm0 3H3V8h1v1zm6 3H8v2h2v2h2v-2h2v-2h-2v-2h-2v2z"
-                    ></path>
-                  </svg>
-                  <p>
-                    Add a markdown file to the posts directory and run
-                    ${' '}<code>node make</code>${' '} from the project root.
-                  </p>
-                </div>
-              `
-            : posts
-                .filter(([k, v]) =>
-                  k.toLowerCase().match(searchTerm.toLowerCase())
-                )
-                .sort(([k, v], [k1, v1]) =>
-                  +new Date(v.mtime) > +new Date(v1.mtime) ? -1 : 0
-                )
-                .map(
-                  x =>
-                    html`
-                      <${linkToArticle} data=${x} key=${x[0]} />
-                    `
-                ))}
+        (posts.length === 0
+          ? html`
+              <div className=${style.gettingStarted}>
+                <svg viewBox="0 0 14 16" aria-hidden="true">
+                  <path
+                    fill-rule="evenodd"
+                    d="M12 8V1c0-.55-.45-1-1-1H1C.45 0 0 .45 0 1v12c0 .55.45 1 1 1h2v2l1.5-1.5L6 16v-4H3v1H1v-2h7v-1H2V1h9v7h1zM4 2H3v1h1V2zM3 4h1v1H3V4zm1 2H3v1h1V6zm0 3H3V8h1v1zm6 3H8v2h2v2h2v-2h2v-2h-2v-2h-2v2z"
+                  ></path>
+                </svg>
+                <p>
+                  Add a markdown file to the posts directory and run ${' '}<code
+                    >node make</code
+                  >${' '} from the project root.
+                </p>
+              </div>
+            `
+          : posts
+              .filter(([k, v]) =>
+                k.toLowerCase().match(searchTerm.toLowerCase())
+              )
+              .sort(([k, v], [k1, v1]) =>
+                +new Date(v.mtime) > +new Date(v1.mtime) ? -1 : 0
+              )
+              .map(
+                (x) =>
+                  html`
+                    <${linkToArticle}
+                      data=${x}
+                      key=${x[0]}
+                      dispatch=${dispatch}
+                    />
+                  `
+              ))}
       </div>
     </main>
   `;
 };
 
-const article = ({ route }) => {
-  const [post, setPost] = useState('');
-
+const article = ({ state, dispatch }) => {
   useEffect(() => {
-    getPost(route.slice(1)).then(setPost);
+    getPost(state.route.slice(1)).then((post) => dispatch({ post }));
   }, []);
 
   return html`
     <main className=${style.post}>
-      <article className=${style.article} innerHTML=${post} />
+      <article className=${style.article} innerHTML=${state.post} />
     </main>
   `;
 };
@@ -169,7 +182,7 @@ const style = {
   logo: css`
     width: 3.2rem;
     height: 3.2rem;
-    fill: #262626;
+    fill: #333;
     transform: translateY(5%);
   `,
   avatar: css`
@@ -249,6 +262,7 @@ const style = {
     padding: 2rem 2rem 4rem;
     overflow-y: auto;
     height: 100%;
+    flex: 0 1 100%;
     -webkit-overflow-scrolling: touch;
 
     @media (min-width: 110ch) {
@@ -348,26 +362,34 @@ const style = {
       padding: 0 0.38em;
       background: #333;
     }
-  `
+  `,
+};
+
+const reducer = (state, update) => ({
+  ...state,
+  ...(typeof update === 'function' ? update(state) : update),
+});
+
+const initialState = {
+  route: null,
+  posts: null,
+  post: '',
+  searchTerm: '',
 };
 
 const app = () => {
-  const [route, setRoute] = useState(null);
+  const [state, dispatch] = useReducer(reducer, initialState);
 
   useEffect(() => {
     const updateRoute = () =>
-      setRoute(
-        location.host.match('github.io')
-          ? '/' +
-              location.pathname
-                .split('/')
-                .slice(2)
-                .join('/')
-          : location.pathname
-      );
+      dispatch(() => ({
+        route: location.host.match('github.io')
+          ? '/' + location.pathname.split('/').slice(2).join('/')
+          : location.pathname,
+      }));
     addEventListener('popstate', updateRoute);
     const pushState = window.history.pushState;
-    window.history.pushState = function() {
+    window.history.pushState = function () {
       pushState.apply(history, arguments);
       updateRoute();
     };
@@ -375,16 +397,15 @@ const app = () => {
   }, []);
 
   return (
-    route &&
+    state.route &&
     html`
-      <${route === '/' ? index : article} route=${route} />
+      <${header} state=${state} dispatch=${dispatch} />
+      <${state.route === '/' || state.searchTerm ? index : article}
+        state=${state}
+        dispatch=${dispatch}
+      />
     `
   );
 };
 
-render(
-  html`
-    <${app} />
-  `,
-  document.body
-);
+render(html`<${app} />`, document.body);

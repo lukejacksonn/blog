@@ -1,0 +1,6 @@
+{
+  "scripts": {
+    "start": "npm run build && npx servor --reload --browse --editor",
+    "build": "node make.js"
+  }
+}
