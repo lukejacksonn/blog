@@ -8,6 +8,8 @@ For the benefit of you that do not know already, [Tailwind](https://tailwindcss.
 
 > ⚡️ Check out the [live and interactive demo](https://esm.codes/#Ly8gT2NlYW53aW5kIGRlbW8gYnkgQGx1a2VqYWNrc29ubgovLyAtLS0tLS0tLS0tLS0tLS0tCiAgICAKaW1wb3J0IHsgcmVuZGVyLCBoIH0gZnJvbSAnaHR0cHM6Ly91bnBrZy5jb20vcHJlYWN0P21vZHVsZSc7CmltcG9ydCBodG0gZnJvbSAnaHR0cHM6Ly91bnBrZy5jb20vaHRtP21vZHVsZSc7CmltcG9ydCBvdyBmcm9tICdodHRwczovL3VucGtnLmNvbS9vY2VhbndpbmQnOwoKY29uc3QgaHRtbCA9IGh0bS5iaW5kKGgpOwoKcmVuZGVyKAogIGh0bWxgCiAgICA8ZGl2IGNsYXNzTmFtZT0ke293YAogICAgICBoLWZ1bGwKICAgICAgYmctcHVycGxlLTUwMAogICAgICBmbGV4CiAgICAgIGl0ZW1zLWNlbnRlcgogICAgICBqdXN0aWZ5LWNlbnRlcgogICAgYH0+CiAgICAgIDxoMSBjbGFzc05hbWU9JHtvd2AKICAgICAgICB0ZXh0LXdoaXRlCiAgICAgICAgZm9udC1ib2xkCiAgICAgICAgZm9udC1zYW5zCiAgICAgICAgaG92ZXI6cm90YXRlLTMKICAgICAgICBob3ZlcjpzY2FsZS0xNTAKICAgICAgICBob3ZlcjpjdXJzb3ItcG9pbnRlcgogICAgICBgfT5IZWxsbyBXb3JsZDwvaDE+CiAgICA8L2Rpdj4KICBgLAogIGRvY3VtZW50LmJvZHkKKTs=)
 
+This is a post about how I went about making [Oceanwind](https://github.com/lukejacksonn/oceanwind); my very own runtime implementation of Tailwind. If you are looking more for documentation rather than a story then please stop right here and go [checkout the README](https://github.com/lukejacksonn/oceanwind).
+
 ## What is atomic CSS exactly
 
 Tailwind (like [Tachyons](https://tachyons.io) before it) takes advantage of _atomic styles_. An approach that is becoming more and more talked about lately. The idea, generally, is that instead of using class names like `btn-primary` which might add a multitude of style rules to a given element, we'd use more granular class names like, for example `p-10 bg-blue border-1 font-bold` which are often more self explanitory and usually map to a single CSS rule.
