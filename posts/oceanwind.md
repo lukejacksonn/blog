@@ -8,8 +8,7 @@ For the benefit of you that do not know already, Tailwind is a utility-first CSS
 
 Tailwind (like Tachyons before it) takes advantage of _atomic styles_. An approach that is becoming more and more talked about lately. The idea, generally, is that instead of using class names like `btn-primary` which might add a multitude of style rules to a given element, we'd use more granular class names like, for example `p-10 bg-blue border-1 font-bold` which are often more self explanitory and usually map to a single CSS rule.
 
-There are many well written articles out there that define very well this philosophy; like X, Y and
-Z. They go into more depth explaining the pros and cons of atomic CSS and/or compare it to various other approaches like BEM for example. I highly recommend reading these resources!
+There are many well written articles out there that define this philosophy. They go into more depth explaining the pros and cons of atomic CSS and/or compare it to various other approaches like BEM for example. I highly recommend reading some of these resources for a bit of context here!
 
 Like most things, some people love the idea of atomic css, others hate it. So I will not be advocating for or against it here. What I will be explaning, is how I went about flipping everything on its head and developed – from the top down – a library that mitigates what I think are the biggest drawbacks of the current Tailwind implementation, whilst maintaining the same wonderfully thought out API.
 
@@ -36,7 +35,7 @@ It turns out that the recommended way of adding all the class names you might ne
 @tailwind utilities;
 ```
 
-Tailwind will swap these directives out at build time with all of its generated CSS. As you might have noticed, this is not _normal_ or valid CSS. Which is why step 4 in the getting started guid is required. I [don't use a build step](https://formidable.com/blog/2019/no-build-step) in the majority of my projects these days. This realisation suddenly made Tailwind a non-starter for me!
+Tailwind will swap these directives out at build time with all of its generated CSS. As you might have noticed, this is not _normal_ or valid CSS. Which is why step 4 in the getting started guide is required. For most people this is probably not a big deal, but you see, I [don't use a build step](https://formidable.com/blog/2019/no-build-step) in the majority of my projects these days. This realisation suddenly made Tailwind a non-starter for me!
 
 I was pretty gutted but continued scrolling down the getting started document when I saw the title **Using Tailwind via CDN**. Now, I'm a big fan of CDNs, they are fast and they are simple. So I got all excited again. Apparently all it actually takes to add all the tailwind class names to your project, is this line of HTML:
 
@@ -49,7 +48,7 @@ I was pretty gutted but continued scrolling down the getting started document wh
 
 This actually works great and ended up inspiring one developer to make a [PR to czs](https://github.com/lukejacksonn/csz/pull/9) (a small CSS-in-JS library I made a while back) which allows you to import CSS files from absolute URLs like this, from within JS modules. So I was now up and running with Tailwind in my project!
 
-So why'd you go and rewrite a perfectly good stylesheet in JavaScript? Well, using the CDN version of Tailwind comes with a few downsides. these are outlined quite clearly in their documentation:
+OK. So why'd you go and rewrite a perfectly good stylesheet.. in JavaScript? Well, using the CDN version of Tailwind comes with a few downsides. these are outlined quite clearly in their documentation:
 
 - You can't customize Tailwind's default theme
 - You can't use any directives like @apply, @variants, etc.
