@@ -2,13 +2,17 @@
 
 > How and why I wrote a library that converts tailwind shorthand into css at runtime
 
-For the benefit of you that do not know already, Tailwind is a utility-first CSS framework built for rapidly building custom UI on the web. It is very similar to the once popular and somewhat ubiquitous Bootstrap framework but with a much more functional twist.
+For the benefit of you that do not know already, [Tailwind](https://tailwindcss.com) is a utility-first CSS framework built for rapidly building custom UI on the web. It is very similar to the once popular and somewhat ubiquitous Bootstrap framework but with a much more functional twist.
+
+<img width="100%" src="https://user-images.githubusercontent.com/1457604/91981751-32310b00-ed21-11ea-8a89-f30f1437f9a2.gif">
+
+> ⚡️ Check out the [live and interactive demo](https://esm.codes/#Ly8gT2NlYW53aW5kIGRlbW8gYnkgQGx1a2VqYWNrc29ubgovLyAtLS0tLS0tLS0tLS0tLS0tCiAgICAKaW1wb3J0IHsgcmVuZGVyLCBoIH0gZnJvbSAnaHR0cHM6Ly91bnBrZy5jb20vcHJlYWN0P21vZHVsZSc7CmltcG9ydCBodG0gZnJvbSAnaHR0cHM6Ly91bnBrZy5jb20vaHRtP21vZHVsZSc7CmltcG9ydCBvdyBmcm9tICdodHRwczovL3VucGtnLmNvbS9vY2VhbndpbmQnOwoKY29uc3QgaHRtbCA9IGh0bS5iaW5kKGgpOwoKcmVuZGVyKAogIGh0bWxgCiAgICA8ZGl2IGNsYXNzTmFtZT0ke293YAogICAgICBoLWZ1bGwKICAgICAgYmctcHVycGxlLTUwMAogICAgICBmbGV4CiAgICAgIGl0ZW1zLWNlbnRlcgogICAgICBqdXN0aWZ5LWNlbnRlcgogICAgYH0+CiAgICAgIDxoMSBjbGFzc05hbWU9JHtvd2AKICAgICAgICB0ZXh0LXdoaXRlCiAgICAgICAgZm9udC1ib2xkCiAgICAgICAgZm9udC1zYW5zCiAgICAgICAgaG92ZXI6cm90YXRlLTMKICAgICAgICBob3ZlcjpzY2FsZS0xNTAKICAgICAgICBob3ZlcjpjdXJzb3ItcG9pbnRlcgogICAgICBgfT5IZWxsbyBXb3JsZDwvaDE+CiAgICA8L2Rpdj4KICBgLAogIGRvY3VtZW50LmJvZHkKKTs=)
 
 ## What is atomic CSS exactly
 
-Tailwind (like Tachyons before it) takes advantage of _atomic styles_. An approach that is becoming more and more talked about lately. The idea, generally, is that instead of using class names like `btn-primary` which might add a multitude of style rules to a given element, we'd use more granular class names like, for example `p-10 bg-blue border-1 font-bold` which are often more self explanitory and usually map to a single CSS rule.
+Tailwind (like [Tachyons](https://tachyons.io) before it) takes advantage of _atomic styles_. An approach that is becoming more and more talked about lately. The idea, generally, is that instead of using class names like `btn-primary` which might add a multitude of style rules to a given element, we'd use more granular class names like, for example `p-10 bg-blue border-1 font-bold` which are often more self explanitory and usually map to a single CSS rule.
 
-There are many well written articles out there that define this philosophy. They go into more depth explaining the pros and cons of atomic CSS and/or compare it to various other approaches like BEM for example. I highly recommend reading some of these resources for a bit of context here!
+There are many well-written articles out there that define this philosophy. They go into more depth explaining the pros and cons of atomic CSS and/or compare it to various other approaches like BEM for example; see [In Defense of Utility-First CSS](https://frontstuff.io/in-defense-of-utility-first-css), [CSS Utility Classes and "Separation of Concerns"](https://adamwathan.me/css-utility-classes-and-separation-of-concerns) and [A year of Utility Classes](https://css-irl.info/a-year-of-utility-classes). I highly recommend reading some of these resources for a bit of context here!
 
 Like most things, some people love the idea of atomic css, others hate it. So I will not be advocating for or against it here. What I will be explaning, is how I went about flipping everything on its head and developed – from the top down – a library that mitigates what I think are the biggest drawbacks of the current Tailwind implementation, whilst maintaining the same wonderfully thought out API.
 
