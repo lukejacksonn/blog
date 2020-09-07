@@ -43,7 +43,7 @@ It turns out that the recommended way of adding all the class names you might ne
 
 Tailwind will swap these directives out at build time with all of its generated CSS. As you might have noticed, this is not _normal_ or valid CSS. Which is why step 4 in the getting started guide is required. For most people this is probably not a big deal, but you see, I [don't use a build step](https://formidable.com/blog/2019/no-build-step) in the majority of my projects these days. This realisation suddenly made Tailwind a non-starter for me!
 
-I was pretty gutted but continued scrolling down the getting started document when I saw the title **Using Tailwind via CDN**. Now, I'm a big fan of CDNs, they are fast and they are simple. So I got all excited again. Apparently all it actually takes to add all the tailwind class names to your project, is this line of HTML:
+I was pretty gutted but continued scrolling down the getting started document when I saw the title **Using Tailwind via CDN**. Now, I'm a big fan of CDNs, they are fast and they are simple. I got all excited again. Apparently all it actually takes to add all the tailwind class names to your project, is this line of HTML:
 
 ```html
 <link
@@ -52,7 +52,7 @@ I was pretty gutted but continued scrolling down the getting started document wh
 />
 ```
 
-This actually works great and ended up inspiring one developer to make a [PR to czs](https://github.com/lukejacksonn/csz/pull/9) (a small CSS-in-JS library I made a while back) which allows you to import CSS files from absolute URLs like this, from within JS modules. So I was now up and running with Tailwind in my project!
+This actually works great and ended up inspiring one developer to make a [PR to czs](https://github.com/lukejacksonn/csz/pull/9) (a small CSS-in-JS library I made a while back) which allows you to import CSS files from absolute URLs like this, from within JS modules. I was now up and running with Tailwind in my project!
 
 OK. So why'd you go and rewrite a perfectly good stylesheet.. in JavaScript? Well, using the CDN version of Tailwind comes with a few downsides. these are outlined quite clearly in their documentation:
 
@@ -68,15 +68,15 @@ Ohh no! The lack of these features really takes the wind out the Tailwind sails.
 
 So what's the craic? Why are Tailwind setting such a high baseline here? Well, this is mainly down to the optimize through purgation approach that has been taken in the library design. To use all of Tailwind, first you need to generate all of Tailwind. By that I mean, for the class `bg-white` to work then the class `.bg-white { background: #fff; }` must be defined. Tailwind doesn't know what class names you are going to use ahead of time, so it has to assume you want to use them all, which means it has to generate every possible permutation of every directive and variant.
 
-When you start to work out about all the possible combinations of all class names and variants then you end up with some very big numbers. Imagine for example the `bg-` directive. It is suffixed by a color (like `white` in the example above) and there are 10 hues in the Tailwind base theme. Whatsmore there are 9 shades of each hue. So that means there are `10 * 9` rules that need to be generated in order to cover all possible permutations of the `bg-` directive. There are more directives like this (that accept a color after them), like `text-` and `border-` for example, which, by the same logic as `bg-` will require 90 rules each to be generated. Wowzer.
+When you start to work out about all the possible combinations of all class names and variants then you end up with some very big numbers. Imagine for example the `bg-` directive. It is suffixed by a color (like `white` in the example above) and there are 10 hues in the Tailwind base theme. Whatsmore there are 9 shades of each hue. That means there are `10 * 9` rules that need to be generated in order to cover all possible permutations of the `bg-` directive. There are more directives like this (that accept a color after them), like `text-` and `border-` for example, which, by the same logic as `bg-` will require 90 rules each to be generated. Wowzer.
 
-If you are sat there thinking, well that isn't _so_ bad. Then lets talk about variants. Variants like `sm:` which essentially wraps a directive in a media query. So `sm:bg-white` translates to `@media (min-width: 640px) { .sm\:bg-white { background: white; } }`. There are 4 such responsive variants like this (`sm`, `md`, `lg`, `xl`). So you can probably see where this is going by now, this means that to cover all possible permutations of the `bg-` directive for example, we now need to generate `10 * 9 * 4` rules. That's 360 rules for one directive, then 360 more for `text-` and again for `border-` which is 1080 rules for 3 directives over 4 responsive variants! If this is starting to sound like a lot by now, wait until you hear about the pseudo variants like `:hover`, `:disabled`, `:active` etc. of which there are currently 16 documented. That's a bug number.
+If you are sat there thinking, well that isn't _so_ bad. Then lets talk about variants. Variants like `sm:` which essentially wraps a directive in a media query. So `sm:bg-white` translates to `@media (min-width: 640px) { .sm\:bg-white { background: white; } }` for example. There are 4 such responsive variants like this (`sm`, `md`, `lg`, `xl`). So you can probably see where this is going by now, this means that to cover all possible permutations of the `bg-` directive for example, we now need to generate `10 * 9 * 4` rules. That's 360 rules for one directive, then 360 more for `text-` and again for `border-` which is 1080 rules for 3 directives over 4 responsive variants! If this is starting to sound like a lot by now, wait until you hear about the pseudo variants like `:hover`, `:disabled`, `:active` etc. of which there are currently 16 documented. That's a bug number.
 
-For those not so mathematically inclined like myself, the result of such mega combinatory explosion becomes apparent when using the development build of Tailwind:
+For those **not so** mathematically inclined like myself, the result of such a mega combinatory explosion becomes apparent when using the development build of Tailwind:
 
 > Using the default configuration, the development build of Tailwind CSS is 2365.4kB uncompressed, 185.0kB minified and compressed with Gzip, and 44.6kB when compressed with Brotli.
 
-That is **2.3 megabytes** of CSS.. most of which you won't use! So how are you supposed to get all this output down to just what you need. Well, as outlined in the [controlling file size](https://tailwindcss.com/docs/controlling-file-size) guide:
+That is **2.3 megabytes** of CSS.. most of which you probably won't use! How are you supposed to get all this output down to just what you need? Well, as outlined in the [controlling file size](https://tailwindcss.com/docs/controlling-file-size) guide:
 
 > When building for production, you should always use Tailwind's purge option to tree-shake unused styles and optimize your final build size. When removing unused styles with Tailwind, it's very hard to end up with more than 10kb of compressed CSS.
 
@@ -87,11 +87,11 @@ That sounds more like it! Less than 10kb sounds like a very reasonable amount of
 - It doesn't _just work_ work at runtime (obviously)
 - It is non-deterministic and quite error prone
 
-All things considered here, suddenly Tailwind was looking like a non-starter for me again; especially for an application that was going to make it beyond development and into production without a build step.
+All things considered, suddenly Tailwind was looking like a non-starter for me again; especially for an application that was going to make it beyond development and into production without a build step.
 
 ## Can't we have our cake and eat it?
 
-After the realisation that you have to choose between a build step or masses of redundancy I took a step back from the idea. I had this niggling feeling that there was surely a better way to get what I wanted. So what did I actually want? Well, put simply, I needed a function that, when given a term like `bg-white` returns me `background: white`, when given `mt-1` it should return `margin-top: 0.25rem` as specified in the Tailwind API.
+After the realisation that you have to choose between a build step or masses of redundancy I took a step back from the idea. I had this niggling feeling that there was surely a better way to get what I wanted. So what did I actually want? Well, put simply, I needed a function that, when given a term like `bg-white` returns me `background-color: white`, when given `mt-1` it should return `margin-top: 0.25rem` as specified in the Tailwind API.
 
 This got me thinking, could I make a regular expression then use string replace to turn `mt` into `margin-top` and `bg` into `background` and so on? It seemed trivial enough, so I started implementing such a function. I soon realised that with all the directives in the API, and with all the variants, that a regex would quickly become unweildly (not to mention slow)... back to the drawing board!
 
@@ -149,7 +149,7 @@ So now we had this big file containing (almost) all possible grammars – there 
 
 I got the general gist of what was going on (and helped out by playing the role of duck pointing out syntactic errors and unscrambling some cryptic intermediate outputs) but by now I was way out of my depth. Luckily, the code that was being generated, although verbose, wasn't too hard to grok at all. It was essentially a big switch statement and those, I am familiar with!
 
-There were a few key learnings and tricks that were applied to make the output not only work, but be as compact and consistent as possible. To demonstrate how the generated solution worked let's consider the first case we looked at which was `bg-white`. Now, at first this seems like a very trivial case that could be denoted by the grammar `[['bg', '$color'], ['background', '$1']]` but what we did not consider before is that `bg-red-500` is also a valid Tailwind shorthand but which has the grammar `[['bg', '$any', '$shade'], ['background-color', '$2']]`. So how did we go about covering both cases? Well it goes something like this:
+There were a few key learnings and tricks that were applied to make the output not only work, but be as compact and consistent as possible. To demonstrate how the generated solution worked let's consider the first case we looked at which was `bg-white`. Now, at first this seems like a very trivial case that could be denoted by the grammar `[['bg', '$color'], ['background-color', '$1']]` but what we did not consider before is that `bg-red-500` is also a valid Tailwind shorthand but which has the grammar `[['bg', '$any', '$shade'], ['background-color', '$2']]`. So how did we go about covering both cases? Well it goes something like this:
 
 ```js
 const out = {}
@@ -160,7 +160,7 @@ switch(input.length) {
   case 2:
     switch (input[0]) {
       case 'bg':
-        out['background'] = input[1];
+        out['background-color'] = input[1];
         break;
         ...
     }
@@ -168,7 +168,7 @@ switch(input.length) {
   case 3:
     switch (input[0]) {
       case 'bg':
-        out['background'] = theme.colors[input[1]][input[2]];
+        out['background-color'] = theme.colors[input[1]][input[2]];
         break;
         ...
     }
@@ -179,7 +179,7 @@ switch(input.length) {
 return out;
 ```
 
-For a start we split the input into parts at every `-` character. We then, somewhat unintuitively count how many parts we have then switch on that. So `bg-white` has two parts, whilst `bg-red-500` has three parts, and so on. This helps keep the translation operation for directives with different lengths (but a common first part) nice and straight forward. We then switch on the first part of the directive, in this instance looking for a `bg` case. It just so happens that we know (because it was defined in our grammar file) that, if a `bg` directive has just two parts then we can go ahead and use the second part as the CSS value. So `bg-rebeccapurple` for example, returns `{ background: rebeccapurple }` and we are done. If, however, the directive has three parts then we have to assume that a color from the _theme_ file is being requested. So in the case of `bg-red-500` the `red-500` parts get converted to the value defined in the theme file, which just so happens to be `#F56565`, so `{ background: #F56565 }` is returned.
+For a start we split the input into parts at every `-` character. We then, somewhat unintuitively count how many parts we have ands switch on that; `bg-white` has two parts, whilst `bg-red-500` has three parts, and so on. This helps keep the translation operation for directives with different lengths (but a common first part) nice and straight forward. We then switch on the first part of the directive, in this instance looking for a `bg` case. It just so happens that we know (because it was defined in our grammar file) that, if a `bg` directive has just two parts then we can go ahead and use the second part as the CSS value. So `bg-rebeccapurple` for example, returns `{ background-color: rebeccapurple }` and we are done. If, however, the directive has three parts then we have to assume that a color from the _theme_ file is being requested. In the case of `bg-red-500` the `red-500` parts get converted to the value defined in the theme file, which just so happens to be `#F56565`, so `{ background-color: #F56565 }` is returned.
 
 I have slightly trivialised the cases and the code here for the sakes of demonstration, but hopefully you get the gist. This really isn't rocket science. Rather a slightly fancy lookup table. Regardless, we were quite happy with ourselves and I personally, couldn't wait to try it out.
 
@@ -189,13 +189,15 @@ However the more I tried, the more edge cases I was finding that were either not
 
 ## So can we have our cake and eat it
 
-We were in the midst of lockdown at this point, my motivation and passion were dwindling. I woke up the next day and for some reason I couldn't face [the code we had written](https://github.com/kitten/oceanwind). It had been such an ordeal getting everything together and to be quite honest I didn't really understand the codegen element of the project. That was Phil's department and I felt like I'd already used up a lot of his precious time. So I proceeded, quite solemnly to get on with my "real work" for the client I was assigned to at the time, whilst this project lay dorment on my hard drive for the next month. Phil made a few amendments and probably hoped that would inspire me to pick it back up but my brain was being stubborn.
+We were in the midst of lockdown at this point, my motivation and passion were dwindling. I woke up the next day and for some reason I couldn't face [the code we had written](https://gist.github.com/kitten/219ddda1db5df4ad42a05abf0f2738dd) despite it being pretty damn good for a nights work!
 
-> I realised that this was quite uncharacteristic of me and that my body was trying to tell me something. I needed some time off. So I filed a request for a month long vacation which my employer was kind enough to grant me.
+It had been such an ordeal getting everything together and to be quite honest I didn't really understand the codegen element of the project. That was Phil's department and I felt like I'd already used up a lot of his precious time. So I proceeded, quite solemnly to get on with my "real work" for the client I was assigned to at the time, whilst this project lay dorment on my hard drive for the next month. Phil made a few amendments and probably hoped that would inspire me to pick it back up but my brain was being stubborn.
+
+> I realised that this was quite uncharacteristic of me and that my body was trying to tell me something. I needed some time off. I filed a request for a month long vacation which my employer was kind enough to grant me.
 
 During my month off I hardly opened my laptop at all but this project was still lingering in the back of my mind. I knew there was still so much to do for it to be a proper proof of concept, no matter a production ready piece of software. Then one day (some time during week 3) I thought screw it, let's do it. I opened up my code editor and started writing some tests.
 
-Writing tests were the logical next thing to do. The last thing I'd done is to identify that we had indeed missed some cases and/or got something wrong in the grammars or codegen. That said, I knew that it was _mostly_ right. The only way I was going to know what was wrong exactly is to write out an example of each unique type of directive, followed by what I expected the CSS output to look like. So I started playing around to see what that might look like.
+Writing tests were the logical next thing to do. The last thing I'd done is to identify that we had indeed missed some cases and/or got something wrong in the grammars or codegen. That said, I knew that it was _mostly_ right. The only way I was going to know what was wrong exactly is to write out an example of each unique type of directive, followed by what I expected the CSS output to look like.
 
 ```js
 const tests = {
@@ -243,14 +245,16 @@ As you can see in the example above, Otion makes applying responsive variants pr
 
 ## All together now
 
-Everything was pretty much in place. Now all that was left was to pull everything together into a function that would be exposed from the main module, then try using that function in a real life application. So let's look at how that was all going to work.
+Everything was pretty much in place. Now all that was left was to pull everything together into a function that would be exposed from the main module, then try using that function in a real life application.
+
+Let's look at how that was all going to work.
 
 ```js
 import oceanwind from './index.js';
 document.body.className = oceanwind`mt-1 sm:bg-white`;
 ```
 
-Most of the projects I work on are either preact or react based. So CSS-in-JS wasn't a new concept for me. So I reached for a familiar variable input mechanism, a tagged template literal. In most JavaScript styling libraries there is the option to write css inbetween the template literals and so it should feel familiar to most developers. It also means that directives can be written over multiple lines as supposed to in one long line (which Tailwind is limited to). I thought that this should help improve readability in some instances.
+Most of the projects I work on are either preact or react based, therefore CSS-in-JS wasn't a new concept for me. I reached for a familiar variable input mechanism, a tagged template literal. In most JavaScript styling libraries there is the option to write css inbetween the template literals and so it should feel familiar to most developers. It also means that directives can be written over multiple lines as supposed to in one long line (which Tailwind is limited to). I thought that this should help improve readability in some instances.
 
 Now the input method was established I just had to write the function that processed the inputs and generated the desired output. The steps I had in my head at this point went something like this:
 
@@ -323,7 +327,9 @@ I hadn't dealt with custom properties in this implementation yet as there just h
 prev[key] = key === 'transform' && pVal ? [oVal, pVal].join(' ') : oVal;
 ```
 
-It now checks if it is merging a transform key, and if it is, then purge the existing value with the new value by means of joining with a space character as prescribed by the CSS specification. This was far from ideal and still makes me feel queezy but it fixed the problem so I ran with it. It would be good to look at the custom property method in the future and see if it is worth refactoring to. This exploration could lead to exciting new ways of using CSS custom properties.
+It now checks if it is merging a transform key, and if it is, then it mergest the existing value with the new value by means of joining with a space character, as prescribed by the CSS specification.
+
+This was far from ideal and still makes me feel queezy but it fixed the problem so I ran with it. It would be good to look at the custom property method in the future and see if it is worth refactoring to. This exploration could lead to exciting new ways of using CSS custom properties.
 
 ## Are you quite finished already
 
