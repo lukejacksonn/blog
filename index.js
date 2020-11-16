@@ -6,7 +6,7 @@ import {
   useRef,
   html,
   css,
-} from 'https://lukejacksonn.github.io/blog/runtime.js';
+} from 'https://lukejacksonn.com/blog/runtime.js';
 
 const getPost = (file) =>
   fetch(`./posts/${file}.md`)
