@@ -6,7 +6,7 @@ import {
   useRef,
   html,
   css,
-} from 'https://lukejacksonn.com/blog/runtime.js';
+} from './runtime.js';
 
 const getPost = (file) =>
   fetch(`./posts/${file}.md`)
@@ -383,9 +383,7 @@ const app = () => {
   useEffect(() => {
     const updateRoute = () =>
       dispatch(() => ({
-        route: location.host.match('github.io')
-          ? '/' + location.pathname.split('/').slice(2).join('/')
-          : location.pathname,
+        route: location.pathname,
       }));
     addEventListener('popstate', updateRoute);
     const pushState = window.history.pushState;
