@@ -18,11 +18,7 @@ const getPosts = () =>
     .then((res) => res.json())
     .catch(() => ({}));
 
-const avatar = location.host.match('github.io')
-  ? `https://github.com/${location.host.split('.')[0]}.png`
-  : 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkqAcAAIUAgUW0RjgAAAAASUVORK5CYII=';
-
-const header = ({ state, dispatch }) => {
+const header = ({ dispatch }) => {
   return html`
     <header className=${style.header}>
       <a
@@ -43,7 +39,12 @@ const header = ({ state, dispatch }) => {
         placeholder="Search for articles..."
         onInput=${(e) => dispatch({ searchTerm: e.target.value })}
       />
-      <img className=${style.avatar} src=${avatar} />
+      <a href="https://github.com/lukejacksonn">
+        <img
+          className=${style.avatar}
+          src="https://github.com/lukejacksonn.png"
+        />
+      </a>
     </header>
   `;
 };
@@ -136,7 +137,7 @@ const index = ({ state, dispatch }) => {
 
 const article = ({ state, dispatch }) => {
   useEffect(() => {
-    getPost(state.route.slice(1)).then((post) => dispatch({ post }));
+    getPost(state.route).then((post) => dispatch({ post }));
   }, []);
 
   return html`
