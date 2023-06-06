@@ -3,7 +3,7 @@
     <title>lukejacksonn | blog</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <script>
-      (function() {
+      (function () {
         var redirect = sessionStorage.redirect;
         delete sessionStorage.redirect;
         if (redirect && redirect != location.href)
@@ -11,7 +11,7 @@
       })();
 
       let vh = window.innerHeight * 0.01;
-      document.documentElement.style.setProperty('--vh', `${vh}px`);
+      document.documentElement.style.setProperty("--vh", `${vh}px`);
     </script>
     <style>
       *,
@@ -107,15 +107,15 @@
       }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/highlight.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked@3.0.8/marked.min.js"></script>
     <script>
       marked.setOptions({
         highlight: (code, language) => {
           const validLanguage = hljs.getLanguage(language)
             ? language
-            : 'plaintext';
+            : "plaintext";
           return hljs.highlight(validLanguage, code).value;
-        }
+        },
       });
     </script>
     <script defer src="./index.js" type="module"></script>
